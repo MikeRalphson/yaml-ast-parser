@@ -20,6 +20,7 @@ export interface YAMLDocument {
 export interface YAMLNode extends YAMLDocument{
     startPosition:number
     endPosition:number
+    line:number
     kind:Kind
     anchorId?:string
     valueObject?:any
@@ -56,6 +57,7 @@ export interface YAMLScalar extends YAMLNode{
 export interface YAMLMapping extends YAMLNode{
     key:YAMLScalar
     value:YAMLNode
+    line:number
 }
 export interface YAMLSequence extends YAMLNode{
     items:YAMLNode[]
@@ -64,13 +66,14 @@ export interface YamlMap extends YAMLNode{
     mappings:YAMLMapping[]
 }
 export function newMapping(key:YAMLScalar,value:YAMLNode):YAMLMapping{
-    var end = (value ? value.endPosition : key.endPosition + 1); //FIXME.workaround, end should be defied by position of ':'
+    var end = (value ? value.endPosition : key.endPosition + 1); //FIXME.workaround, end should be defined by position of ':'
     //console.log('key: ' + key.value + ' ' + key.startPosition + '..' + key.endPosition + ' ' + value + ' end: ' + end);
     var node = {
       key: key,
       value: value,
       startPosition: key.startPosition,
       endPosition: end,
+      line:-1,
       kind: Kind.MAPPING,
       parent: null,
       errors: []
@@ -84,6 +87,7 @@ export function newAnchorRef(key:string,start:number,end:number,value:YAMLNode):
         value:value,
         startPosition:start,
         endPosition:end,
+	line:-1,
         kind:Kind.ANCHOR_REF,
         parent:null
     }
@@ -93,6 +97,7 @@ export function newScalar(v:string|boolean|number=""):YAMLScalar{
         errors:[],
         startPosition:-1,
         endPosition:-1,
+	line:-1,
         value:""+v,
         kind:Kind.SCALAR,
         parent:null,
@@ -109,6 +114,7 @@ export function newItems():YAMLSequence{
         errors:[],
         startPosition:-1,
         endPosition:-1,
+	line:-1,
         items:[],
         kind:Kind.SEQ,
         parent:null
@@ -122,6 +128,7 @@ export function newMap(mappings?: YAMLMapping[]):YamlMap{
         errors:[],
         startPosition:-1,
         endPosition:-1,
+	line:-1,
         mappings: mappings ? mappings : [],
         kind:Kind.MAP,
         parent:null

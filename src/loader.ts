@@ -388,7 +388,8 @@ function storeMappingPair(state:State, _result:ast.YamlMap, keyTag, keyNode:ast.
         endPosition:valueNode.endPosition,
         parent:null,
         errors:[],
-        mappings: [],kind:ast.Kind.MAP};
+        mappings: [],kind:ast.Kind.MAP,
+        line:state.line};
   }
 
   // if ('tag:yaml.org,2002:merge' === keyTag) {
